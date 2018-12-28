@@ -16,13 +16,7 @@ jobs:
       - checkout
       - run: go mod tidy
       - run: go mod vendor
-      - run:
-          name: ensure clean git repo
-          command: |
-            if [ -n "$(git status --porcelain=v2)" ]; then
-              echo "not correctly vendored"
-              exit 1
-            fi
+      - run: test -z "$(git status --porcelain=v2)"
   build:
     executor: build-executor
     steps:
