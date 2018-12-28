@@ -19,7 +19,7 @@ jobs:
       - run:
           name: ensure clean git repo
           command: |
-            if [ -n $(git status --porcelain=v2) ]; then
+            if [ -n "$(git status --porcelain=v2)" ]; then
               echo "not correctly vendored"
               exit 1
             fi
