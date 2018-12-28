@@ -7,26 +7,18 @@ executors:
     working_directory: /go/src/github.com/hairyhenderson/go-revendor-bot
 
 jobs:
-  # checkout:
-  #   executor: build-executor
-  #   steps:
-  #     - checkout
-  #     - persist_to_workspace:
-  #         root: /go
-  #         paths:
-  #           - .
   test-vendoring:
     executor: build-executor
+    environment:
+      - GO111MODULE=on
+      - GOFLAGS=-mod=vendor
     steps:
       - checkout
-      # - attach_workspace:
-      #     at: /go
+      - run: go mod tidy
+      - run: go mod vendor
       - run:
-          name: test vendoring
+          name: ensure clean git repo
           command: |
-            export GO111MODULE=on
-            export GOFLAGS=-mod=vendor
-            go mod tidy && go mod vendor
             if [ -n $(git status --porcelain=v2) ]; then
               echo "not correctly vendored"
               exit 1
@@ -34,8 +26,6 @@ jobs:
   build:
     executor: build-executor
     steps:
-      # - attach_workspace:
-      #     at: /go
       - checkout
       - run: make build
       - persist_to_workspace:
@@ -45,8 +35,6 @@ jobs:
   lint:
     executor: build-executor
     steps:
-      # - attach_workspace:
-      #     at: /go
       - checkout
       - run: make lint
   test:
@@ -71,8 +59,6 @@ jobs:
     executor: build-executor
     steps:
       - checkout
-      # - attach_workspace:
-      #     at: /go
       - setup_remote_docker:
           version: 18.06.0-ce
           docker_layer_caching: true
