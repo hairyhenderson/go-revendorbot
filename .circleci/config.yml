@@ -16,7 +16,9 @@ jobs:
       - checkout
       - run: go mod tidy
       - run: go mod vendor
-      - run: test -z "$(git status --porcelain=v2)"
+      - run:
+          name: ensure clean git repo
+          command: test -z "$(git status --porcelain=v2)"
   build:
     executor: build-executor
     steps:
