@@ -74,13 +74,13 @@ func (b *Bot) Handle(eventType, deliveryID string, payload []byte) error {
 		err = b.handleComment(e)
 		dur := time.Now().Sub(startTime)
 		if err != nil {
-			aerr := b.AddComment(b.ctx, repo, prNum, "I got an error while trying to revendor:\n```\n"+err.Error()+"\n```\n\nTook "+dur.String())
+			aerr := b.AddComment(b.ctx, repo, prNum, ":robot: :warning: RevendorBot got an error while trying to revendor:\n```\n"+err.Error()+"\n```\n\nTook "+dur.String())
 			if aerr != nil {
 				log.Printf("errored trying to add a comment %v", aerr)
 			}
 			return err
 		}
-		err = b.AddComment(b.ctx, repo, prNum, "Revendored successfully in "+dur.String())
+		err = b.AddComment(b.ctx, repo, prNum, ":robot: RevendorBot done :hourglass: "+dur.String())
 		if err != nil {
 			return errors.Wrap(err, "errored trying to add a comment")
 		}
@@ -121,7 +121,7 @@ func (b *Bot) handleComment(event *github.IssueCommentEvent) error {
 	}
 
 	number := event.GetIssue().GetNumber()
-	err = b.AddComment(ctx, repo, number, "`go.mod` or `go.sum` modified, will need to revendor.")
+	err = b.AddComment(ctx, repo, number, ":robot: RevendorBot says `go.mod` or `go.sum` modified, may need to revendor.")
 	if err != nil {
 		return err
 	}
@@ -140,7 +140,7 @@ func (b *Bot) handleComment(event *github.IssueCommentEvent) error {
 
 	if !b.revendorRequired(ctx, repo, ref) {
 		log.Print("no need to revendor")
-		return nil
+		return b.AddComment(ctx, repo, number, ":robot: RevendorBot doesn't need to revendor! :beach_umbrella:")
 	}
 
 	return b.revendor(repo, ref)
