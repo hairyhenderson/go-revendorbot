@@ -94,15 +94,12 @@ func (b *Bot) Handle(eventType, deliveryID string, payload []byte) error {
 
 func filterComment(event *github.IssueCommentEvent) bool {
 	if event.GetAction() != "created" {
-		// log.Printf("ignoring %s action", event.GetAction())
 		return false
 	}
 	if event.GetComment() == nil || strings.TrimSpace(event.GetComment().GetBody()) != "/revendor" {
-		// log.Printf("ignoring comment %#v", event.GetComment())
 		return false
 	}
 	if !event.GetIssue().IsPullRequest() {
-		// log.Printf("ignoring non-PR issue %d", event.GetIssue().GetNumber())
 		return false
 	}
 	return true
@@ -275,7 +272,6 @@ func (b *Bot) revendorRequired(ctx context.Context, repo Repo, ref string) bool 
 		return false
 	}
 	for _, f := range commit.Files {
-		log.Printf("File %#v", f)
 		if f.GetFilename() == "go.mod" || f.GetFilename() == "go.sum" {
 			return true
 		}
