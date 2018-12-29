@@ -238,7 +238,7 @@ func (b *Bot) revendor(repo Repo, ref string) error {
 		return errors.Wrap(err, "git add failed")
 	}
 
-	cmd = newCmd(ctx, dir, "git", "commit", "-m", "updating results of `go mod tidy` and `go mod vendor`")
+	cmd = newCmd(ctx, dir, "git", "commit", "-S", "-sm", "updating results of `go mod tidy` and `go mod vendor`")
 	err = cmd.Run()
 	if err != nil {
 		return errors.Wrap(err, "git commit failed")
