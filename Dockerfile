@@ -42,7 +42,7 @@ LABEL org.opencontainers.image.revision=$VCS_REF \
 
 ENTRYPOINT [ "/go-revendorbot" ]
 
-FROM alpine:3.10@sha256:6a92cd1fcdc8d8cdec60f33dda4db2cb1fcdcacf3410a8e05b3741f44a9b5998 AS alpine
+FROM alpine:3.11@sha256:ddba4d27a7ffc3f86dd6c2f92041af252a1f23a8e742c90e6e1297bfa1bc0c45 AS alpine
 
 ARG OS=linux
 ARG ARCH=amd64
